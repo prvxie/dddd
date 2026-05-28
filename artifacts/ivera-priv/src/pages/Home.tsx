@@ -1,9 +1,44 @@
+import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 import { CategoryHero } from "@/components/CategoryHero";
 import { ProductCard } from "@/components/ProductCard";
-import { PaymentSection } from "@/components/PaymentSection";
+import { CartDrawer } from "@/components/CartDrawer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { useCart } from "@/context/CartContext";
+
+const PRODUCTS = [
+  {
+    id: "script",
+    category: "script",
+    name: "ivera.priv Script",
+    tagline: "The ultimate Roblox script — dominate every server.",
+    price: 9.99,
+    originalPrice: 19.99,
+    stock: 3,
+    badge: "SALE",
+    description: "ivera.priv Script is a premium, undetected Roblox exploit script delivering game-breaking advantages across hundreds of supported games. Auto-updates ensure you're always ahead.",
+    features: ["Aimbot & Target Tracking", "ESP / Wallhack", "Speed & Jump Hacks", "Auto-farm & Teleport", "God Mode (Supported Games)", "500+ Experiences Supported", "Lifetime Auto-updates"],
+    delivery: "Instant via Email",
+    requirements: "Roblox Account, Windows 10/11, Executor (Synapse X / KRNL)",
+    note: "Never use on main account. Use alt account for safety."
+  },
+  {
+    id: "external",
+    category: "external",
+    name: "ivera.priv External",
+    tagline: "External overlay — undetectable by any anti-cheat.",
+    price: 14.99,
+    originalPrice: 29.99,
+    stock: 5,
+    badge: "NEW",
+    description: "ivera.priv External is a fully external Roblox overlay tool that operates outside the game process, making it completely undetectable. Includes ESP, aimbot, and radar.",
+    features: ["Fully External (no injection)", "Player & Item ESP", "Silent Aimbot", "Radar Overlay", "Stream-proof Mode", "Instant Updates", "24/7 Support"],
+    delivery: "Instant via Email",
+    requirements: "Roblox Account, Windows 10/11, Admin Rights",
+    note: "Safest option — recommended for main accounts."
+  }
+];
 
 const FAQS = [
   {
@@ -29,44 +64,51 @@ const FAQS = [
 ];
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("script");
+  const [cartOpen, setCartOpen] = useState(false);
+  const { addToCart } = useCart();
+
+  const filteredProducts = PRODUCTS.filter(p => p.category === selectedCategory);
+
   return (
     <div className="min-h-[100dvh] bg-background text-foreground font-sans selection:bg-white/20 selection:text-white">
-      <NavBar />
+      <NavBar onCartOpen={() => setCartOpen(true)} />
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       
-      <main className="container mx-auto px-4 py-8 space-y-32">
-        {/* HERO */}
-        <section id="hero" className="w-full">
-          <CategoryHero />
+      <main className="container mx-auto px-4 py-8 space-y-20">
+        {/* CATEGORIES */}
+        <section id="categories" className="scroll-mt-24 pt-4">
+          <CategoryHero 
+            selectedCategory={selectedCategory} 
+            onSelectCategory={setSelectedCategory} 
+          />
         </section>
 
         {/* PRODUCTS */}
-        <section id="product" className="relative scroll-mt-24">
+        <section id="products" className="scroll-mt-24">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-12 text-center"
+            className="mb-8"
           >
-            <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">The Script</h2>
-            <p className="text-muted-foreground font-mono text-sm max-w-xl mx-auto">One product. Unmatched performance. Dominate instantly.</p>
+            <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">
+              Products — <span className="text-white/50">{selectedCategory === "script" ? "Script" : "External"}</span>
+            </h2>
           </motion.div>
           
-          <ProductCard />
-        </section>
-
-        {/* PAYMENT */}
-        <section id="payment" className="relative scroll-mt-24">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12 text-center"
-          >
-            <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">Payment</h2>
-            <p className="text-muted-foreground font-mono text-sm max-w-xl mx-auto">Anonymous, secure, and fast.</p>
-          </motion.div>
-          
-          <PaymentSection />
+          <div className="space-y-6">
+            {filteredProducts.map(p => (
+              <ProductCard 
+                key={p.id} 
+                product={p} 
+                onAddToCart={(prod) => {
+                  addToCart({ id: prod.id, name: prod.name, price: prod.price, qty: 1 });
+                  setCartOpen(true);
+                }} 
+              />
+            ))}
+          </div>
         </section>
 
         {/* FAQ */}
@@ -107,8 +149,8 @@ export default function Home() {
           </div>
           
           <div className="flex flex-wrap justify-center gap-6 font-mono text-xs text-muted-foreground mb-8 uppercase tracking-widest">
-            <button onClick={() => {document.getElementById('product')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Script</button>
-            <button onClick={() => {document.getElementById('payment')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Payment</button>
+            <button onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}} className="hover:text-white transition-colors">Home</button>
+            <button onClick={() => {document.getElementById('categories')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Products</button>
             <button onClick={() => {document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">FAQ</button>
             <a href="#" className="hover:text-white transition-colors">Discord</a>
           </div>
