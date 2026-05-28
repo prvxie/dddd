@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import { MouseGlow } from "@/components/MouseGlow";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <MouseGlow />
           <Router />
         </WouterRouter>
         <Toaster />
