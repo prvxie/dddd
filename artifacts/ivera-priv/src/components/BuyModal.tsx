@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Copy, CheckCircle2 } from "lucide-react";
+import { Copy, CheckCircle2, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { StripeCheckout } from "@/components/StripeCheckout";
 
 const WALLET_ADDRESSES: Record<string, string> = {
   BTC: import.meta.env.VITE_BTC_ADDRESS || "Configure your BTC address in Vercel env vars",
@@ -18,7 +19,7 @@ interface BuyModalProps {
   product: { name: string; price: number; id: string };
 }
 
-type PaymentMethod = "BTC" | "LTC" | "ETH" | "Robux";
+type PaymentMethod = "BTC" | "LTC" | "ETH" | "Robux" | "Stripe";
 
 export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
   const [email, setEmail] = useState("");
@@ -176,7 +177,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                 <div className="space-y-3">
                   <Label className="text-xs uppercase tracking-widest text-muted-foreground">Payment Method</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {(["BTC", "LTC", "ETH", "Robux"] as PaymentMethod[]).map((method) => (
+                    {(["BTC", "LTC", "ETH", "Robux", "Stripe"] as PaymentMethod[]).map((method) => (
                       <button
                         key={method}
                         data-testid={`payment-method-${method.toLowerCase()}`}
@@ -187,7 +188,14 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                             : "bg-transparent text-white border-white/20 hover:border-white/50"
                         }`}
                       >
-                        {method}
+                        {method === "Stripe" ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <CreditCard className="w-3.5 h-3.5" />
+                            Card
+                          </span>
+                        ) : (
+                          method
+                        )}
                       </button>
                     ))}
                   </div>
@@ -196,14 +204,27 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                 {renderPaymentInstructions()}
 
                 <div className="pt-4">
-                  <Button 
-                    className="w-full bg-white text-black hover:bg-white/90 rounded-none font-bold uppercase tracking-widest h-12"
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    data-testid="modal-submit"
-                  >
-                    {loading ? "Sending..." : "Place Order"}
-                  </Button>
+                  {paymentMethod === "Stripe" ? (
+                    <StripeCheckout
+                      productName={product.name}
+                      price={product.price}
+                      email={email}
+                      onError={(err) => setError(err)}
+                      onSuccess={() => {
+                        setSuccess(true);
+                        saveOrderLocally();
+                      }}
+                    />
+                  ) : (
+                    <Button 
+                      className="w-full bg-white text-black hover:bg-white/90 rounded-none font-bold uppercase tracking-widest h-12"
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      data-testid="modal-submit"
+                    >
+                      {loading ? "Sending..." : "Place Order"}
+                    </Button>
+                  )}
                   {error && (
                     <div className="mt-3 text-xs text-red-500 text-center uppercase tracking-widest">
                       {error}

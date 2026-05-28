@@ -1,6 +1,6 @@
 {
-  "buildCommand": "vite build --config vite.config.ts",
-  "outputDirectory": "dist/public",
+  "buildCommand": "cd .. && pnpm install && cd ivera-priv && pnpm build",
+  "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },

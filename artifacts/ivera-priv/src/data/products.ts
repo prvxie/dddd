@@ -1,5 +1,5 @@
-import scriptImg from "@assets/image_1780007536480.webp";
-import externalImg from "@assets/Screenshot_2026-05-28_221142_1780007511425.webp";
+import scriptImg from "@assets/Screenshot_2026-05-28_221142_1780007511425.webp";
+import externalImg from "@assets/image_1780007536480.webp";
 
 export interface Product {
   id: string;

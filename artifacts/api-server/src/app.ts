@@ -3,6 +3,9 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Express = express();
 
