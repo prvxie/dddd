@@ -108,7 +108,6 @@ VITE_API_URL=https://your-backend.vercel.app
 
 ### Backend (.env)
 ```
-STRIPE_SECRET_KEY=sk_live_...
 FRONTEND_URL=https://your-frontend.vercel.app
 PORT=3001
 DISCORD_BOT_TOKEN=your_discord_bot_token

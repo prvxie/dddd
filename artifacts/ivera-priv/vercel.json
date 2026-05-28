@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd .. && pnpm install && cd ivera-priv && pnpm build",
+  "buildCommand": "pnpm install && pnpm build",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
@@ -8,5 +8,6 @@
   ],
   "env": {
     "BASE_PATH": "/"
-  }
+  },
+  "installCommand": "pnpm install"
 }
