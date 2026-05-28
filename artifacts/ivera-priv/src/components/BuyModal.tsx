@@ -35,6 +35,25 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const saveOrderLocally = () => {
+    try {
+      const existing = JSON.parse(localStorage.getItem("ivera_orders") || "[]");
+      const order = {
+        id: crypto.randomUUID(),
+        date: new Date().toISOString(),
+        productName: product.name,
+        price: product.price,
+        email,
+        paymentMethod,
+        discordUsername: discordUsername || undefined,
+        status: "pending",
+      };
+      localStorage.setItem("ivera_orders", JSON.stringify([order, ...existing]));
+    } catch {
+      // localStorage unavailable — order still goes through Discord
+    }
+  };
+
   const handleSubmit = async () => {
     if (!email) {
       setError("Email is required");
@@ -60,6 +79,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
         throw new Error("Failed to place order");
       }
       
+      saveOrderLocally();
       setSuccess(true);
     } catch (err) {
       setError("Failed to place order. Please try again.");

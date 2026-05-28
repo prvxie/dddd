@@ -4,23 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Zap } from "lucide-react";
 import { BuyModal } from "@/components/BuyModal";
-
-export interface Product {
-  id: string;
-  category: string;
-  name: string;
-  tagline: string;
-  price: number;
-  originalPrice: number;
-  stock: number;
-  badge: string;
-  description: string;
-  features: string[];
-  delivery: string;
-  requirements: string;
-  note: string;
-  image: string;
-}
+import type { Product } from "@/data/products";
 
 export function ProductCard({ product }: { product: Product }) {
   const [modalOpen, setModalOpen] = useState(false);

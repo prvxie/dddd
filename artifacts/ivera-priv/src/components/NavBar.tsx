@@ -1,27 +1,36 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/products", label: "Products" },
+  { href: "/faq", label: "FAQ" },
+];
 
 export function NavBar() {
-  const scrollTo = (id: string) => {
-    if (id === 'top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  const [location] = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tighter text-white flex items-center uppercase">
-          <span className="font-extrabold text-white">ivera</span><span className="text-white/40 font-light">.priv</span>
+    <nav className="sticky top-0 z-50 w-full border-b border-white/8 bg-background/80 backdrop-blur-md">
+      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center text-xl font-black tracking-tighter uppercase">
+          <span className="text-white">ivera</span>
+          <span className="text-white/25 font-light">.priv</span>
         </Link>
-        <div className="flex items-center gap-6 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-          <div className="flex gap-6">
-            <button onClick={() => scrollTo('top')} className="hover:text-white transition-colors">Home</button>
-            <button onClick={() => scrollTo('products')} className="hover:text-white transition-colors">Products</button>
-            <button onClick={() => scrollTo('faq')} className="hover:text-white transition-colors">FAQ</button>
-          </div>
+        <div className="flex items-center gap-1">
+          {links.map(({ href, label }) => {
+            const active = location === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${
+                  active ? "text-white" : "text-white/40 hover:text-white"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </nav>

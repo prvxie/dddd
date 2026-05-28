@@ -1,169 +1,121 @@
-import { useState } from "react";
-import { NavBar } from "@/components/NavBar";
-import { CategoryHero } from "@/components/CategoryHero";
-import { ProductCard, Product } from "@/components/ProductCard";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { motion } from "framer-motion";
+import robloxCharImg from "@assets/image_(1)_1780006855729.png";
+import { Button } from "@/components/ui/button";
+import { NavBar } from "@/components/NavBar";
 
-import scriptImg from "@assets/image_1780007536480.webp";
-import externalImg from "@assets/Screenshot_2026-05-28_221142_1780007511425.webp";
-
-const PRODUCTS: Product[] = [
-  {
-    id: "script",
-    category: "script",
-    name: "ivera.priv Script",
-    tagline: "Premium Roblox script — dominate every server.",
-    price: 9.99,
-    originalPrice: 19.99,
-    stock: 3,
-    badge: "SALE",
-    description: "ivera.priv Script is an undetected Roblox exploit script with game-breaking advantages across 500+ supported experiences. Features auto-updates so you're always ahead.",
-    features: ["Aimbot & Target Tracking", "ESP / Wallhack", "Speed & Jump Hacks", "Auto-farm & Teleport", "God Mode (Supported Games)", "500+ Experiences Supported", "Lifetime Auto-updates"],
-    delivery: "Instant via Email",
-    requirements: "Roblox Account, Windows 10/11, Executor (Synapse X / KRNL)",
-    note: "Use on alt accounts only for safety.",
-    image: scriptImg
-  },
-  {
-    id: "external",
-    category: "external",
-    name: "ivera.priv External",
-    tagline: "External overlay — fully undetectable.",
-    price: 14.99,
-    originalPrice: 29.99,
-    stock: 5,
-    badge: "NEW",
-    description: "ivera.priv External operates completely outside the Roblox process — no injection, fully undetectable. Includes ESP, aimbot, and radar overlays.",
-    features: ["Fully External (no injection)", "Player & Item ESP", "Silent Aimbot", "Radar Overlay", "Stream-proof Mode", "Instant Updates", "24/7 Support"],
-    delivery: "Instant via Email",
-    requirements: "Roblox Account, Windows 10/11, Admin Rights",
-    note: "Safest option — usable on main account.",
-    image: externalImg
-  }
-];
-
-const FAQS = [
-  {
-    q: "Is the ivera.priv script safe to use?",
-    a: "We prioritize security and undetectability. The script is regularly updated to bypass standard anti-cheats. However, we strongly recommend using it only on secondary or 'alt' accounts to protect your primary account."
-  },
-  {
-    q: "What executors are supported?",
-    a: "ivera.priv supports leading PC executors like Synapse X, KRNL, and Script-Ware. Mobile executors are currently not supported."
-  },
-  {
-    q: "Do I get updates for free?",
-    a: "Yes. Once purchased, you receive lifetime access to updates for the script. As games patch vulnerabilities, our developers push automatic updates."
-  },
-  {
-    q: "How fast will I receive the script after paying?",
-    a: "Cryptocurrency payments are processed automatically after network confirmations (usually under 15 minutes). Robux payments require manual verification and take roughly 10-15 minutes."
-  },
-  {
-    q: "Can I get a refund?",
-    a: "Due to the nature of digital exploits, all sales are final. If the script is entirely non-functional and our support cannot resolve the issue, contact us."
-  }
-];
+const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+const ADMIN_SLUG = import.meta.env.VITE_ADMIN_SLUG || "p0rtal";
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("script");
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [, navigate] = useLocation();
+  const [konamiIdx, setKonamiIdx] = useState(0);
 
-  const filteredProducts = PRODUCTS.filter(p => p.category === selectedCategory);
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 30;
+      const y = (e.clientY / window.innerHeight - 0.5) * 30;
+      setMousePos({ x, y });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const expected = KONAMI[konamiIdx];
+      if (e.key === expected) {
+        const next = konamiIdx + 1;
+        if (next === KONAMI.length) {
+          navigate(`/${ADMIN_SLUG}`);
+          setKonamiIdx(0);
+        } else {
+          setKonamiIdx(next);
+        }
+      } else {
+        setKonamiIdx(0);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [konamiIdx, navigate]);
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground font-sans selection:bg-white/20 selection:text-white">
+    <div className="min-h-[100dvh] bg-background text-foreground font-sans overflow-hidden">
       <NavBar />
-      
-      <main className="container mx-auto px-4 py-8 space-y-20">
-        <section id="hero" className="pt-4">
-          <CategoryHero />
-        </section>
 
-        {/* PRODUCTS SECTION WITH TABS */}
-        <section id="products" className="scroll-mt-24 space-y-12">
-          {/* CATEGORY TABS */}
-          <div className="flex justify-center gap-4">
-            <button
-              data-testid="tab-script"
-              className={`px-8 py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all border ${
-                selectedCategory === "script"
-                  ? "bg-white text-black border-white"
-                  : "bg-transparent text-white border-white/20 hover:border-white/50"
-              }`}
-              onClick={() => setSelectedCategory("script")}
-            >
-              Script
-            </button>
-            <button
-              data-testid="tab-external"
-              className={`px-8 py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all border ${
-                selectedCategory === "external"
-                  ? "bg-white text-black border-white"
-                  : "bg-transparent text-white border-white/20 hover:border-white/50"
-              }`}
-              onClick={() => setSelectedCategory("external")}
-            >
-              External
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            {filteredProducts.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section id="faq" className="relative max-w-3xl mx-auto scroll-mt-24 pb-20">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12 text-center"
-          >
-            <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">FAQ</h2>
-          </motion.div>
-          
-          <Accordion type="single" collapsible className="w-full">
-            {FAQS.map((faq, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-white/10">
-                <AccordionTrigger className="text-left text-white hover:text-white/80 transition-colors text-base font-bold uppercase tracking-widest py-6">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-sm font-mono leading-relaxed pb-6">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </section>
-      </main>
-
-      {/* FOOTER */}
-      <footer className="bg-background border-t border-white/10 py-12 mt-12 relative overflow-hidden">
+      <main className="relative h-[calc(100dvh-64px)] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="mb-8">
-            <h2 className="text-3xl font-black text-white tracking-tighter uppercase">
-              IVERA<span className="text-muted-foreground">.PRIV</span>
-            </h2>
-            <p className="font-mono text-xs text-muted-foreground mt-2 uppercase tracking-widest">Premium Digital Exploits</p>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_50%,rgba(255,255,255,0.04),transparent_60%)] pointer-events-none" />
+
+        <div className="container mx-auto px-8 md:px-16 relative z-10 flex items-center justify-between w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-xl space-y-6"
+          >
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">Premium Digital Exploits</p>
+            <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none">
+              ivera<span className="text-white/25">.priv</span>
+            </h1>
+            <p className="text-lg text-white/60 font-medium leading-relaxed max-w-md">
+              Undetected, reliable, and powerful. The only Roblox exploit shop you need.
+            </p>
+            <div className="flex items-center gap-4 pt-2">
+              <Button
+                data-testid="hero-browse"
+                onClick={() => navigate("/products")}
+                className="rounded-none font-bold uppercase tracking-widest px-10 h-12 bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
+              >
+                Browse Products
+              </Button>
+              <button
+                onClick={() => navigate("/faq")}
+                className="text-sm font-mono text-white/40 hover:text-white uppercase tracking-widest transition-colors"
+              >
+                FAQ →
+              </button>
+            </div>
+            <div className="flex items-center gap-6 pt-4">
+              {["Undetected","Instant Delivery","24/7 Support"].map(t => (
+                <div key={t} className="flex items-center gap-1.5 text-[10px] font-mono text-white/30 uppercase tracking-widest">
+                  <span className="w-1 h-1 rounded-full bg-white/30 inline-block" />
+                  {t}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-1/2 items-center justify-end pointer-events-none pr-8">
+            <div className="absolute w-[400px] h-[400px] bg-white/5 blur-[120px] rounded-full right-0" />
+            <motion.div
+              animate={{ y: [0, -14, 0] }}
+              transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
+              style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
+              className="transition-transform duration-75 ease-out"
+            >
+              <img
+                src={robloxCharImg}
+                alt="ivera character"
+                className="w-[420px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.12)]"
+              />
+            </motion.div>
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-6 font-mono text-xs text-muted-foreground mb-8 uppercase tracking-widest">
-            <button onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}} className="hover:text-white transition-colors">Home</button>
-            <button onClick={() => {document.getElementById('products')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Products</button>
-            <button onClick={() => {document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">FAQ</button>
-            <a href="#" className="hover:text-white transition-colors">Discord</a>
-          </div>
-          
-          <p className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
-            &copy; {new Date().getFullYear()} IVERA.PRIV. ALL RIGHTS RESERVED. NOT AFFILIATED WITH ROBLOX CORP.
-          </p>
         </div>
-      </footer>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">Scroll or browse</span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
+        </motion.div>
+      </main>
     </div>
   );
 }

@@ -16,8 +16,12 @@ A digital product storefront for ivera.priv — selling premium Roblox scripts (
 
 ## Where things live
 
-- `artifacts/ivera-priv/src/pages/Home.tsx` — main page, product data, category tabs
-- `artifacts/ivera-priv/src/components/` — NavBar, CategoryHero, ProductCard, BuyModal
+- `artifacts/ivera-priv/src/pages/Home.tsx` — hero landing page (route `/`)
+- `artifacts/ivera-priv/src/pages/Products.tsx` — products page with Script/External tabs (route `/products`)
+- `artifacts/ivera-priv/src/pages/FAQ.tsx` — FAQ accordion page (route `/faq`)
+- `artifacts/ivera-priv/src/pages/Admin.tsx` — secret admin panel (route `/:VITE_ADMIN_SLUG`)
+- `artifacts/ivera-priv/src/data/products.ts` — all product data and FAQ content (edit here)
+- `artifacts/ivera-priv/src/components/` — NavBar, ProductCard, BuyModal
 - `artifacts/ivera-priv/api/order.ts` — Vercel Edge Function: posts order to Discord webhook
 - `artifacts/ivera-priv/vercel.json` — Vercel deployment config
 
@@ -89,8 +93,44 @@ When you're ready for automatic payment confirmation:
 
 ## Product data
 
-Edit `artifacts/ivera-priv/src/pages/Home.tsx` → `PRODUCTS` array to update:
+Edit `artifacts/ivera-priv/src/data/products.ts` → `PRODUCTS` array to update:
 - Prices
 - Stock counts
 - Descriptions
 - Features list
+
+Also edit `FAQS` array in the same file to update FAQ content.
+
+## Admin Panel
+
+The site has a hidden admin panel for tracking orders.
+
+### How to access (3 ways)
+
+1. **Secret URL** — go to `yoursite.com/p0rtal` (change this via `VITE_ADMIN_SLUG` env var)
+2. **Konami code** — on the home page, press: ↑ ↑ ↓ ↓ ← → ← → B A
+3. `/admin` shows a fake 404 — keeps crawlers/guessers away
+
+### Login
+
+Default password: `iverapriv2025`
+
+To change it before deploying, set `VITE_ADMIN_HASH` in Vercel to the SHA-256 of your password.
+Generate your hash at: [https://emn178.github.io/online-tools/sha256.html](https://emn178.github.io/online-tools/sha256.html)
+
+**Hint:** On the login page, type `unlock` on your keyboard to reveal the default password hint.
+
+### What the admin shows
+
+- Order count, pending count, and total revenue stats
+- Table of all orders placed via Buy Now (stored in browser localStorage)
+- Toggle order status between **pending** and **delivered**
+- Delete individual orders or clear all
+- Session-based auth (auto-logs out when browser tab closes)
+
+### Vercel env vars for admin
+
+| Variable | Description |
+|---|---|
+| `VITE_ADMIN_SLUG` | Secret URL path (default: `p0rtal`) — change before deploying |
+| `VITE_ADMIN_HASH` | SHA-256 of your admin password (default hash = `iverapriv2025`) |
