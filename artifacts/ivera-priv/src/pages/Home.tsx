@@ -1,42 +1,45 @@
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 import { CategoryHero } from "@/components/CategoryHero";
-import { ProductCard } from "@/components/ProductCard";
-import { CartDrawer } from "@/components/CartDrawer";
+import { ProductCard, Product } from "@/components/ProductCard";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
-import { useCart } from "@/context/CartContext";
 
-const PRODUCTS = [
+import scriptImg from "@assets/image_1780007536480.webp";
+import externalImg from "@assets/Screenshot_2026-05-28_221142_1780007511425.webp";
+
+const PRODUCTS: Product[] = [
   {
     id: "script",
     category: "script",
     name: "ivera.priv Script",
-    tagline: "The ultimate Roblox script — dominate every server.",
+    tagline: "Premium Roblox script — dominate every server.",
     price: 9.99,
     originalPrice: 19.99,
     stock: 3,
     badge: "SALE",
-    description: "ivera.priv Script is a premium, undetected Roblox exploit script delivering game-breaking advantages across hundreds of supported games. Auto-updates ensure you're always ahead.",
+    description: "ivera.priv Script is an undetected Roblox exploit script with game-breaking advantages across 500+ supported experiences. Features auto-updates so you're always ahead.",
     features: ["Aimbot & Target Tracking", "ESP / Wallhack", "Speed & Jump Hacks", "Auto-farm & Teleport", "God Mode (Supported Games)", "500+ Experiences Supported", "Lifetime Auto-updates"],
     delivery: "Instant via Email",
     requirements: "Roblox Account, Windows 10/11, Executor (Synapse X / KRNL)",
-    note: "Never use on main account. Use alt account for safety."
+    note: "Use on alt accounts only for safety.",
+    image: scriptImg
   },
   {
     id: "external",
     category: "external",
     name: "ivera.priv External",
-    tagline: "External overlay — undetectable by any anti-cheat.",
+    tagline: "External overlay — fully undetectable.",
     price: 14.99,
     originalPrice: 29.99,
     stock: 5,
     badge: "NEW",
-    description: "ivera.priv External is a fully external Roblox overlay tool that operates outside the game process, making it completely undetectable. Includes ESP, aimbot, and radar.",
+    description: "ivera.priv External operates completely outside the Roblox process — no injection, fully undetectable. Includes ESP, aimbot, and radar overlays.",
     features: ["Fully External (no injection)", "Player & Item ESP", "Silent Aimbot", "Radar Overlay", "Stream-proof Mode", "Instant Updates", "24/7 Support"],
     delivery: "Instant via Email",
     requirements: "Roblox Account, Windows 10/11, Admin Rights",
-    note: "Safest option — recommended for main accounts."
+    note: "Safest option — usable on main account.",
+    image: externalImg
   }
 ];
 
@@ -65,48 +68,49 @@ const FAQS = [
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("script");
-  const [cartOpen, setCartOpen] = useState(false);
-  const { addToCart } = useCart();
 
   const filteredProducts = PRODUCTS.filter(p => p.category === selectedCategory);
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground font-sans selection:bg-white/20 selection:text-white">
-      <NavBar onCartOpen={() => setCartOpen(true)} />
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <NavBar />
       
       <main className="container mx-auto px-4 py-8 space-y-20">
-        {/* CATEGORIES */}
-        <section id="categories" className="scroll-mt-24 pt-4">
-          <CategoryHero 
-            selectedCategory={selectedCategory} 
-            onSelectCategory={setSelectedCategory} 
-          />
+        <section id="hero" className="pt-4">
+          <CategoryHero />
         </section>
 
-        {/* PRODUCTS */}
-        <section id="products" className="scroll-mt-24">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-8"
-          >
-            <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">
-              Products — <span className="text-white/50">{selectedCategory === "script" ? "Script" : "External"}</span>
-            </h2>
-          </motion.div>
-          
+        {/* PRODUCTS SECTION WITH TABS */}
+        <section id="products" className="scroll-mt-24 space-y-12">
+          {/* CATEGORY TABS */}
+          <div className="flex justify-center gap-4">
+            <button
+              data-testid="tab-script"
+              className={`px-8 py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all border ${
+                selectedCategory === "script"
+                  ? "bg-white text-black border-white"
+                  : "bg-transparent text-white border-white/20 hover:border-white/50"
+              }`}
+              onClick={() => setSelectedCategory("script")}
+            >
+              Script
+            </button>
+            <button
+              data-testid="tab-external"
+              className={`px-8 py-3 rounded-full font-bold uppercase tracking-wider text-sm transition-all border ${
+                selectedCategory === "external"
+                  ? "bg-white text-black border-white"
+                  : "bg-transparent text-white border-white/20 hover:border-white/50"
+              }`}
+              onClick={() => setSelectedCategory("external")}
+            >
+              External
+            </button>
+          </div>
+
           <div className="space-y-6">
             {filteredProducts.map(p => (
-              <ProductCard 
-                key={p.id} 
-                product={p} 
-                onAddToCart={(prod) => {
-                  addToCart({ id: prod.id, name: prod.name, price: prod.price, qty: 1 });
-                  setCartOpen(true);
-                }} 
-              />
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </section>
@@ -150,7 +154,7 @@ export default function Home() {
           
           <div className="flex flex-wrap justify-center gap-6 font-mono text-xs text-muted-foreground mb-8 uppercase tracking-widest">
             <button onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}} className="hover:text-white transition-colors">Home</button>
-            <button onClick={() => {document.getElementById('categories')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Products</button>
+            <button onClick={() => {document.getElementById('products')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">Products</button>
             <button onClick={() => {document.getElementById('faq')?.scrollIntoView({behavior: 'smooth'})}} className="hover:text-white transition-colors">FAQ</button>
             <a href="#" className="hover:text-white transition-colors">Discord</a>
           </div>
