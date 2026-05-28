@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Zap } from "lucide-react";
+import { BuyModal } from "@/components/BuyModal";
 
 export interface Product {
   id: string;
@@ -21,8 +23,10 @@ export interface Product {
 }
 
 export function ProductCard({ product }: { product: Product }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const handleBuyNow = () => {
-    window.alert("To purchase, contact us on Discord: discord.gg/iverapriv");
+    setModalOpen(true);
   };
 
   return (
@@ -114,6 +118,11 @@ export function ProductCard({ product }: { product: Product }) {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      <BuyModal 
+        isOpen={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        product={{ name: product.name, price: product.price, id: product.id }} 
+      />
     </motion.div>
   );
 }

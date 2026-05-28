@@ -13,8 +13,8 @@ export function NavBar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tighter text-white flex items-center gap-2 uppercase">
-          <span className="text-primary font-extrabold">IVERA</span><span className="text-muted-foreground">.PRIV</span>
+        <Link href="/" className="text-xl font-bold tracking-tighter text-white flex items-center uppercase">
+          <span className="font-extrabold text-white">ivera</span><span className="text-white/40 font-light">.priv</span>
         </Link>
         <div className="flex items-center gap-6 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           <div className="flex gap-6">
