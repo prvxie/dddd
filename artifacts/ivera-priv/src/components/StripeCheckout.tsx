@@ -8,11 +8,12 @@ interface StripeCheckoutProps {
   productName: string;
   price: number;
   email: string;
+  discordUserId?: string;
   onSuccess?: () => void;
   onError?: (error: string) => void;
 }
 
-export function StripeCheckout({ productName, price, email, onSuccess, onError }: StripeCheckoutProps) {
+export function StripeCheckout({ productName, price, email, discordUserId, onSuccess, onError }: StripeCheckoutProps) {
   const [loading, setLoading] = useState(false);
 
   const handleCheckout = async () => {
@@ -34,6 +35,7 @@ export function StripeCheckout({ productName, price, email, onSuccess, onError }
           productName,
           price,
           email,
+          discordUserId,
         }),
       });
 

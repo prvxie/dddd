@@ -54,19 +54,23 @@ git push -u origin main
    - **Output Directory**: `dist`
 4. Add environment variables:
    - `STRIPE_SECRET_KEY`: Your Stripe secret key (sk_live_...)
-   - `STRIPE_WEBHOOK_SECRET`: Your Stripe webhook secret
    - `FRONTEND_URL`: Your frontend Vercel URL (from Step 2)
    - `PORT`: `3001`
+   - `DISCORD_BOT_TOKEN`: Your Discord bot token
+   - `DISCORD_WEBHOOK_URL`: Your Discord webhook URL for order notifications
 5. Click "Deploy"
 
-## Step 4: Configure Stripe Webhook
+## Step 4: Configure Discord Bot
 
-1. Go to your Stripe Dashboard
-2. Navigate to Developers → Webhooks
-3. Add your backend Vercel URL: `https://your-backend-url.vercel.app/api/stripe/webhook`
-4. Select events to listen for:
-   - `checkout.session.completed`
-5. Copy the webhook signing secret and add it to your backend Vercel environment variables as `STRIPE_WEBHOOK_SECRET`
+1. Go to [Discord Developer Portal](https://discord.comdevelopers/applications)
+2. Create a new application and enable bot
+3. Get your bot token and add it to backend environment variables as `DISCORD_BOT_TOKEN`
+4. Enable necessary bot intents:
+   - Server Members Intent
+   - Message Content Intent
+   - Direct Messages Intent
+5. Create a webhook in your Discord server for order notifications
+6. Add webhook URL to backend environment variables as `DISCORD_WEBHOOK_URL`
 
 ## Step 5: Update Frontend API URL
 
@@ -81,7 +85,9 @@ After deploying both frontend and backend, update the frontend to use the correc
 1. Visit your frontend URL
 2. Try purchasing a product with Stripe card payment
 3. Check the Stripe Dashboard for the payment
-4. Verify the webhook was received
+4. Verify the Discord webhook was received in your server
+5. If you provided a Discord User ID, check your DMs for the product key
+6. Test crypto payments and verify Discord notifications
 
 ## Environment Variables Reference
 
@@ -98,9 +104,10 @@ VITE_API_URL=https://your-backend.vercel.app
 ### Backend (.env)
 ```
 STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
 FRONTEND_URL=https://your-frontend.vercel.app
 PORT=3001
+DISCORD_BOT_TOKEN=your_discord_bot_token
+DISCORD_WEBHOOK_URL=your_discord_webhook_url
 ```
 
 ## Troubleshooting
@@ -111,8 +118,13 @@ PORT=3001
 
 ### Stripe payments fail
 - Verify your API keys are correct
-- Check that the webhook URL is accessible
-- Ensure the webhook secret matches
+- Check that the backend is deployed and running
+
+### Discord notifications not working
+- Verify DISCORD_BOT_TOKEN is correct
+- Check that bot has proper intents enabled
+- Verify DISCORD_WEBHOOK_URL is valid
+- Check backend logs for Discord errors
 
 ### Backend API not reachable
 - Check that the backend is deployed and running

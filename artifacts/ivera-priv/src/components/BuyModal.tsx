@@ -24,6 +24,7 @@ type PaymentMethod = "BTC" | "LTC" | "ETH" | "Robux" | "Stripe";
 export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
   const [email, setEmail] = useState("");
   const [discordUsername, setDiscordUsername] = useState("");
+  const [discordUserId, setDiscordUserId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("BTC");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -72,7 +73,8 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
           price: product.price,
           email,
           paymentMethod,
-          discordUsername
+          discordUsername,
+          discordUserId
         }),
       });
       
@@ -162,7 +164,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="discord" className="text-xs uppercase tracking-widest text-muted-foreground">Discord (optional)</Label>
+                    <Label htmlFor="discord" className="text-xs uppercase tracking-widest text-muted-foreground">Discord Username (optional)</Label>
                     <Input 
                       id="discord" 
                       type="text" 
@@ -171,6 +173,18 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                       onChange={(e) => setDiscordUsername(e.target.value)}
                       className="bg-black/50 border-white/10 rounded-none focus-visible:ring-1 focus-visible:ring-white/30 text-white font-mono placeholder:text-white/20"
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="discordId" className="text-xs uppercase tracking-widest text-muted-foreground">Discord User ID (for delivery)</Label>
+                    <Input 
+                      id="discordId" 
+                      type="text" 
+                      placeholder="123456789012345678"
+                      value={discordUserId}
+                      onChange={(e) => setDiscordUserId(e.target.value)}
+                      className="bg-black/50 border-white/10 rounded-none focus-visible:ring-1 focus-visible:ring-white/30 text-white font-mono placeholder:text-white/20"
+                    />
+                    <p className="text-[9px] text-white/30">Enter your Discord User ID to receive product via DM</p>
                   </div>
                 </div>
 
@@ -209,6 +223,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                       productName={product.name}
                       price={product.price}
                       email={email}
+                      discordUserId={discordUserId}
                       onError={(err) => setError(err)}
                       onSuccess={() => {
                         setSuccess(true);
