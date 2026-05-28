@@ -19,7 +19,7 @@ interface BuyModalProps {
   product: { name: string; price: number; id: string };
 }
 
-type PaymentMethod = "BTC" | "LTC" | "ETH" | "Robux" | "Stripe";
+type PaymentMethod = "BTC" | "LTC" | "ETH" | "Robux";
 
 export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
   const [email, setEmail] = useState("");
@@ -93,9 +93,23 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
 
   const renderPaymentInstructions = () => {
     if (paymentMethod === "Robux") {
+      const robuxAmount = Math.round(product.price * 100); // Rough conversion: $1 = 100 R$
       return (
-        <div className="mt-4 p-4 border border-white/10 bg-white/5 text-sm text-muted-foreground uppercase tracking-wider text-center">
-          Purchase our Roblox Gamepass for the Robux equivalent, then send a screenshot proof to our Discord.
+        <div className="mt-4 p-4 border border-white/10 bg-white/5 space-y-3">
+          <div className="flex justify-between items-center text-xs uppercase tracking-widest text-muted-foreground">
+            <span>Robux Amount:</span>
+            <span className="text-white">{robuxAmount} R$</span>
+          </div>
+          <div className="text-xs text-white/70 leading-relaxed">
+            1. Purchase our Roblox Gamepass for {robuxAmount} R$
+            2. Send screenshot of purchase to our Discord support
+            3. Include your order email in the message
+            4. Product delivered within 15 minutes
+          </div>
+          <div className="p-2 bg-black/50 border border-white/10">
+            <div className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Discord Support:</div>
+            <code className="text-xs text-white/90 font-mono">your-discord-server-link</code>
+          </div>
         </div>
       );
     }
@@ -191,7 +205,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                 <div className="space-y-3">
                   <Label className="text-xs uppercase tracking-widest text-muted-foreground">Payment Method</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {(["BTC", "LTC", "ETH", "Robux", "Stripe"] as PaymentMethod[]).map((method) => (
+                    {(["BTC", "LTC", "ETH", "Robux"] as PaymentMethod[]).map((method) => (
                       <button
                         key={method}
                         data-testid={`payment-method-${method.toLowerCase()}`}

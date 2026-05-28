@@ -53,7 +53,6 @@ git push -u origin main
    - **Build Command**: `pnpm install && pnpm run build`
    - **Output Directory**: `dist`
 4. Add environment variables:
-   - `STRIPE_SECRET_KEY`: Your Stripe secret key (sk_live_...)
    - `FRONTEND_URL`: Your frontend Vercel URL (from Step 2)
    - `PORT`: `3001`
    - `DISCORD_BOT_TOKEN`: Your Discord bot token
@@ -72,6 +71,13 @@ git push -u origin main
 5. Create a webhook in your Discord server for order notifications
 6. Add webhook URL to backend environment variables as `DISCORD_WEBHOOK_URL`
 
+## What is VITE_ADMIN_SLUG?
+
+`VITE_ADMIN_SLUG` is a secret URL path to access the admin panel. For example, if set to `p0rtal`, you can access the admin panel at:
+`your-site.com/p0rtal`
+
+This keeps your admin panel hidden from public view. Change it to something unique and secret.
+
 ## Step 5: Update Frontend API URL
 
 After deploying both frontend and backend, update the frontend to use the correct backend URL:
@@ -83,11 +89,10 @@ After deploying both frontend and backend, update the frontend to use the correc
 ## Testing
 
 1. Visit your frontend URL
-2. Try purchasing a product with Stripe card payment
-3. Check the Stripe Dashboard for the payment
-4. Verify the Discord webhook was received in your server
-5. If you provided a Discord User ID, check your DMs for the product key
-6. Test crypto payments and verify Discord notifications
+2. Try purchasing a product with crypto (BTC/LTC/ETH)
+3. Verify the Discord webhook was received in your server
+4. If you provided a Discord User ID, check your DMs for the product key
+5. Test Robux payment flow and verify Discord notifications
 
 ## Environment Variables Reference
 
@@ -116,9 +121,9 @@ DISCORD_WEBHOOK_URL=your_discord_webhook_url
 - Ensure pnpm is being used (it's required by the workspace)
 - Check that all dependencies are in the workspace catalog
 
-### Stripe payments fail
-- Verify your API keys are correct
-- Check that the backend is deployed and running
+### Crypto payments not working
+- Verify wallet addresses are correct in frontend environment variables
+- Check that backend is deployed and running
 
 ### Discord notifications not working
 - Verify DISCORD_BOT_TOKEN is correct
