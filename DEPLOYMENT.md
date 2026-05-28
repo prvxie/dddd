@@ -98,11 +98,11 @@ After deploying both frontend and backend, update the frontend to use the correc
 
 ### Frontend (.env)
 ```
-VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
 VITE_BTC_ADDRESS=your_btc_address
 VITE_LTC_ADDRESS=your_ltc_address
 VITE_ETH_ADDRESS=your_eth_address
 VITE_ADMIN_SLUG=p0rtal
+VITE_GAMEPASS_LINK=https://www.roblox.com/gamepass/your-gamepass-id
 VITE_API_URL=https://your-backend.vercel.app
 ```
 

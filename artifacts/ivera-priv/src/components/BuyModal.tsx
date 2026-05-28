@@ -107,8 +107,15 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
             4. Product delivered within 15 minutes
           </div>
           <div className="p-2 bg-black/50 border border-white/10">
-            <div className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Discord Support:</div>
-            <code className="text-xs text-white/90 font-mono">your-discord-server-link</code>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Gamepass Link:</div>
+            <a 
+              href={import.meta.env.VITE_GAMEPASS_LINK || "#"} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs text-white/90 font-mono hover:text-white underline"
+            >
+              {import.meta.env.VITE_GAMEPASS_LINK || "Configure gamepass link in Vercel env vars"}
+            </a>
           </div>
         </div>
       );
