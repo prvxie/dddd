@@ -1,13 +1,8 @@
-// Standalone serverless function for order endpoint
-// No monorepo dependencies - handles CORS inline
-
-export default async function handler(req: any, res: any) {
-  // CORS headers
+module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
 
-  // Handle preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -23,7 +18,7 @@ export default async function handler(req: any, res: any) {
 
   const { productName, price, email, paymentMethod, discordUsername, discordUserId } = req.body || {};
 
-  const paymentColors: Record<string, number> = {
+  const paymentColors = {
     BTC: 0xf7931a,
     LTC: 0x345d9d,
     ETH: 0x627eea,
@@ -32,7 +27,7 @@ export default async function handler(req: any, res: any) {
 
   const embed = {
     title: "New Order — ivera.priv",
-    color: paymentColors[paymentMethod] ?? 0xffffff,
+    color: paymentColors[paymentMethod] || 0xffffff,
     fields: [
       { name: "Product", value: productName || "Unknown", inline: true },
       { name: "Price", value: `$${price || 0}`, inline: true },
@@ -56,4 +51,4 @@ export default async function handler(req: any, res: any) {
     console.error("Webhook error:", err);
     return res.status(500).json({ error: "Failed to send webhook" });
   }
-}
+};
