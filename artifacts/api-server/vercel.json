@@ -1,8 +1,9 @@
 {
-  "buildCommand": "pnpm install && pnpm build",
+  "buildCommand": "npm install && npm run build",
   "outputDirectory": "dist",
   "framework": null,
-  "installCommand": "pnpm install",
+  "installCommand": "npm install",
+  "packageManager": "npm",
   "env": {
     "NODE_ENV": "production"
   }

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm build",
+  "buildCommand": "npm install && npm run build",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
@@ -9,5 +9,6 @@
   "env": {
     "BASE_PATH": "/"
   },
-  "installCommand": "pnpm install"
+  "installCommand": "npm install",
+  "packageManager": "npm"
 }
