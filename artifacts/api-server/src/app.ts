@@ -28,7 +28,15 @@ app.use(
     },
   }),
 );
-app.use(cors());
+
+const frontendUrl = process.env.FRONTEND_URL || "*";
+app.use(cors({
+  origin: frontendUrl,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
