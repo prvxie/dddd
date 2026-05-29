@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd artifacts/api-server && npm install && npm run build",
+  "outputDirectory": "artifacts/api-server/dist",
+  "framework": null,
+  "installCommand": "npm install",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
