@@ -3,9 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Copy, CheckCircle2, CreditCard } from "lucide-react";
+import { Copy, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { StripeCheckout } from "@/components/StripeCheckout";
 
 const WALLET_ADDRESSES: Record<string, string> = {
   BTC: import.meta.env.VITE_BTC_ADDRESS || "Configure your BTC address in Vercel env vars",
@@ -223,14 +222,7 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                             : "bg-transparent text-white border-white/20 hover:border-white/50"
                         }`}
                       >
-                        {method === "Stripe" ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <CreditCard className="w-3.5 h-3.5" />
-                            Card
-                          </span>
-                        ) : (
-                          method
-                        )}
+                        {method}
                       </button>
                     ))}
                   </div>
@@ -239,28 +231,14 @@ export function BuyModal({ isOpen, onClose, product }: BuyModalProps) {
                 {renderPaymentInstructions()}
 
                 <div className="pt-4">
-                  {paymentMethod === "Stripe" ? (
-                    <StripeCheckout
-                      productName={product.name}
-                      price={product.price}
-                      email={email}
-                      discordUserId={discordUserId}
-                      onError={(err) => setError(err)}
-                      onSuccess={() => {
-                        setSuccess(true);
-                        saveOrderLocally();
-                      }}
-                    />
-                  ) : (
-                    <Button 
-                      className="w-full bg-white text-black hover:bg-white/90 rounded-none font-bold uppercase tracking-widest h-12"
-                      onClick={handleSubmit}
-                      disabled={loading}
-                      data-testid="modal-submit"
-                    >
-                      {loading ? "Sending..." : "Place Order"}
-                    </Button>
-                  )}
+                  <Button 
+                    className="w-full bg-white text-black hover:bg-white/90 rounded-none font-bold uppercase tracking-widest h-12"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    data-testid="modal-submit"
+                  >
+                    {loading ? "Sending..." : "Place Order"}
+                  </Button>
                   {error && (
                     <div className="mt-3 text-xs text-red-500 text-center uppercase tracking-widest">
                       {error}
