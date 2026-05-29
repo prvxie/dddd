@@ -9,6 +9,5 @@
   "env": {
     "BASE_PATH": "/"
   },
-  "installCommand": "npm install",
-  "packageManager": "npm"
+  "installCommand": "npm install"
 }

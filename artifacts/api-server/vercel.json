@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm install",
-  "packageManager": "npm",
   "env": {
     "NODE_ENV": "production"
   }
